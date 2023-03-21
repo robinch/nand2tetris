@@ -27,5 +27,19 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // Addresses
+    // RAM 0-16383
+    // Screen 16384-24575
+    // Keyboard 24576-24576
+    // What is the 16384 in binary? 100000000000000
+    // What is 24576 in binary? 110000000000000
+
+    Not(in=address[14], out=useRAM);
+    And(a=useRAM, b=load, out=loadRAM);
+    And(a=address[14], b=load, out=loadScreen);
+    RAM16K(in=in, load=loadRAM, address=address[0..13], out=outRAM);
+    Screen(in=in, load=loadScreen, address=address[0..12], out=outScreen);
+    Keyboard(out=outKeyboard);
+    Mux16(a=outScreen, b=outKeyboard, sel=address[13], out=outScreenKeyboard);
+    Mux16(a=outRAM, b=outScreenKeyboard, sel=address[14], out=out);
 }
