@@ -3,6 +3,6 @@ defmodule HackAssemblerTest do
   doctest HackAssembler
 
   test "Add" do
-     assert :ok = HackAssembler.assemble("test/support/Add.asm")
+    assert :ok = HackAssembler.assemble("test/support/Add.asm")
   end
 end
