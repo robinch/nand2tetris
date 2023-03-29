@@ -10,7 +10,7 @@ defmodule HackAssembler.MachineCode do
 
   def c_instruction(dest, comp, jump) do
     prefix = "111"
-    a = String.contains?(comp, "M") |> bool_to_bit()
+    a = comp |> String.contains?("M") |> bool_to_bit()
     dest = dest(dest)
     comp = comp(comp)
     jump = jump(jump)
