@@ -3,9 +3,9 @@ defmodule HackAssembler.MachineCode do
     bin_address =
       address
       |> to_binary()
-      |> String.slice(3, 13)
+      |> String.slice(1, 15)
 
-    "000" <> bin_address
+    "0" <> bin_address
   end
 
   def c_instruction(dest, comp, jump) do
