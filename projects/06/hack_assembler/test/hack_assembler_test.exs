@@ -10,6 +10,10 @@ defmodule HackAssemblerTest do
     test_assembler("MaxL")
   end
 
+  test "RectL" do
+    test_assembler("RectL")
+  end
+
   defp test_assembler(base_file_name) do
     assert :ok = HackAssembler.assemble("test/support/#{base_file_name}.asm")
 

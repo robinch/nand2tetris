@@ -18,7 +18,6 @@ defmodule HackAssembler.MachineCode do
     prefix <> a <> comp <> dest <> jump
   end
 
-
   defp dest(nil), do: "000"
 
   defp dest(dest) do
