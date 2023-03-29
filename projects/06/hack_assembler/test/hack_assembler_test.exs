@@ -3,9 +3,18 @@ defmodule HackAssemblerTest do
   doctest HackAssembler
 
   test "Add" do
-    assert :ok = HackAssembler.assemble("test/support/Add.asm")
-    expected = File.stream!("test/support/Add_expected.hack")
-    result = File.stream!("test/support/Add.hack")
+    test_assembler("Add")
+  end
+
+  test "MaxL" do
+    test_assembler("MaxL")
+  end
+
+  defp test_assembler(base_file_name) do
+    assert :ok = HackAssembler.assemble("test/support/#{base_file_name}.asm")
+
+    expected = File.stream!("test/support/#{base_file_name}_expected.hack")
+    result = File.stream!("test/support/#{base_file_name}.hack")
 
     for {exp, res} <- Enum.zip(expected, result) do
       assert exp == res

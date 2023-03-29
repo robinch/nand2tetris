@@ -40,7 +40,7 @@ defmodule HackAssembler.MachineCode do
       "JLT" -> "100"
       "JNE" -> "101"
       "JLE" -> "110"
-      "JMP" -> "000"
+      "JMP" -> "111"
     end
   end
 
