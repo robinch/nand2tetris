@@ -18,17 +18,15 @@ defmodule HackAssembler.MachineCode do
     prefix <> a <> comp <> dest <> jump
   end
 
+
+  defp dest(nil), do: "000"
+
   defp dest(dest) do
-    case dest do
-      nil -> "000"
-      "M" -> "001"
-      "D" -> "010"
-      "DM" -> "011"
-      "A" -> "100"
-      "AM" -> "101"
-      "AD" -> "110"
-      "ADM" -> "000"
-    end
+    bit_0 = dest |> String.contains?("M") |> bool_to_bit()
+    bit_1 = dest |> String.contains?("D") |> bool_to_bit()
+    bit_2 = dest |> String.contains?("A") |> bool_to_bit()
+
+    bit_2 <> bit_1 <> bit_0
   end
 
   def jump(jump) do
