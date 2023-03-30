@@ -4,6 +4,8 @@ defmodule HackAssembler.Parser do
   def parse!("//" <> comment), do: %Parser.Comment{content: comment}
 
   def parse!("@" <> address) do
+    address = remove_inline_comment(address)
+
     case Integer.parse(address) do
       {_, _} -> %Parser.AInstruction{address: address, symbolic: false}
       :error -> %Parser.AInstruction{address: address, symbolic: true}
@@ -11,6 +13,8 @@ defmodule HackAssembler.Parser do
   end
 
   def parse!("(" <> _ = label) do
+    label = remove_inline_comment(label)
+
     name =
       case Regex.run(~r/\(([^)]+)\)/, label) do
         [_, name] -> name
@@ -20,6 +24,8 @@ defmodule HackAssembler.Parser do
   end
 
   def parse!(line) do
+    line = remove_inline_comment(line)
+
     {c_instruction, rest} =
       case String.split(line, "=") do
         [dest, rest] -> {%Parser.CInstruction{dest: dest}, rest}
@@ -30,5 +36,10 @@ defmodule HackAssembler.Parser do
       [comp, jump] -> %{c_instruction | comp: comp, jump: jump}
       [comp] -> %{c_instruction | comp: comp}
     end
+  end
+
+  defp remove_inline_comment(line) do
+    String.split(line, " ")
+    |> hd()
   end
 end
