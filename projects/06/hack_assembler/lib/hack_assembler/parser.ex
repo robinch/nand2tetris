@@ -10,6 +10,15 @@ defmodule HackAssembler.Parser do
     end
   end
 
+  def parse!("(" <> _ = label) do
+    name = 
+      case Regex.run(~r/\(([^)]+)\)/, label) do
+        [_, name] -> name
+      end
+
+    %Parser.Label{name: name}
+  end
+
   def parse!(line) do
     {c_instruction, rest} =
       case String.split(line, "=") do

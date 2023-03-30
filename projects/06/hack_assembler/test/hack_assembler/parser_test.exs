@@ -34,4 +34,8 @@ defmodule HackAssembler.ParserTest do
       assert Parser.parse!("AD=D") == %Parser.CInstruction{dest: "AD", comp: "D"}
     end
   end
+
+  test "parse label" do
+    assert Parser.parse!("(LABEL)") == %Parser.Label{name: "LABEL"}
+  end
 end
