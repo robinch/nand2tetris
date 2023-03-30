@@ -11,7 +11,7 @@ defmodule HackAssembler.Parser do
   end
 
   def parse!("(" <> _ = label) do
-    name = 
+    name =
       case Regex.run(~r/\(([^)]+)\)/, label) do
         [_, name] -> name
       end
