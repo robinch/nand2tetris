@@ -21,11 +21,20 @@ defmodule HackAssemblerTest do
     end
   end
 
-  # describe "with symbos" do
-  #   test "Max" do
-  #     test_assembler("Max")
-  #   end
-  # end
+  @tag :only
+  describe "with symbos" do
+    test "Max" do
+      test_assembler("Max")
+    end
+
+    test "Rect" do
+      test_assembler("Rect")
+    end
+
+    test "Pong" do
+      test_assembler("Pong")
+    end
+  end
 
   defp test_assembler(base_file_name) do
     assert :ok = HackAssembler.assemble("test/support/#{base_file_name}.asm")

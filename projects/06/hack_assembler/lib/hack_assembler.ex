@@ -18,23 +18,35 @@ defmodule HackAssembler do
   end
 
   def first_pass(parsed_lines) do
-    Stream.transform(parsed_lines, 0, fn
-      %Parser.Label{name: name}, n ->
-        SymbolTable.add_label(name, n + 1)
-        {[], n + 1}
+    {lines, _} =
+      Enum.reduce(parsed_lines, {_lines = [], _start_address = 0}, fn
+        %Parser.Label{name: name}, {lines, n} ->
+          SymbolTable.add_label(name, Integer.to_string(n))
+          {lines, n}
 
-      line, n ->
-        {[line], n + 1}
-    end)
+        line, {lines, n} ->
+          {[line | lines], n + 1}
+      end)
+
+    Enum.reverse(lines)
   end
 
   def second_pass(parsed_lines) do
-    Stream.transform(parsed_lines, 0, fn
-      %Parser.AInstruction{address: addr}, address ->
-        {[MachineCode.a_instruction(addr)], address}
+    Stream.map(parsed_lines, fn
+      %Parser.AInstruction{address: address, symbolic: false} ->
+        MachineCode.a_instruction(address)
 
-      %Parser.CInstruction{dest: dest, comp: comp, jump: jump}, address ->
-        {[MachineCode.c_instruction(dest, comp, jump)], address}
+      %Parser.AInstruction{address: symbolic_address, symbolic: true} ->
+        if not SymbolTable.contains?(symbolic_address) do
+          SymbolTable.add_var(symbolic_address)
+        end
+
+        address = SymbolTable.get_address(symbolic_address)
+
+        MachineCode.a_instruction(address)
+
+      %Parser.CInstruction{dest: dest, comp: comp, jump: jump} ->
+        MachineCode.c_instruction(dest, comp, jump)
     end)
   end
 
