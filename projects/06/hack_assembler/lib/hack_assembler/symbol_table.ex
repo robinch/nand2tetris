@@ -21,6 +21,10 @@ defmodule HackAssembler.SymbolTable do
     GenServer.call(__MODULE__, {:get_address, name})
   end
 
+  def get_table() do
+    GenServer.call(__MODULE__, :get_table)
+  end
+
   @impl true
   def init(_) do
     state = %{n: 16, s_table: initialize_s_table()}
@@ -56,6 +60,11 @@ defmodule HackAssembler.SymbolTable do
   def handle_call({:get_address, name}, _from, %{s_table: s_table} = state) do
     address = Map.get(s_table, name)
     {:reply, address, state}
+  end
+
+  @impl true
+  def handle_call(:get_table, _from, state) do
+    {:reply, state, state}
   end
 
   defp initialize_s_table() do
