@@ -1,5 +1,5 @@
 defmodule HackAssembler.MachineCodeTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias HackAssembler.MachineCode
 
