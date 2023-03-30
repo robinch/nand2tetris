@@ -2,7 +2,13 @@ defmodule HackAssembler.Parser do
   alias HackAssembler.Parser
 
   def parse!("//" <> comment), do: %Parser.Comment{content: comment}
-  def parse!("@" <> address), do: %Parser.AInstruction{address: address}
+
+  def parse!("@" <> address) do
+    case Integer.parse(address) do
+      {_, _} -> %Parser.AInstruction{address: address, symbolic: false}
+      :error -> %Parser.AInstruction{address: address, symbolic: true}
+    end
+  end
 
   def parse!(line) do
     {c_instruction, rest} =

@@ -1,3 +1,3 @@
 defmodule HackAssembler.Parser.AInstruction do
-  defstruct [:address]
+  defstruct [:address, :symbolic]
 end

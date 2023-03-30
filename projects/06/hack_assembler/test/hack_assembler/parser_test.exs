@@ -7,8 +7,14 @@ defmodule HackAssembler.ParserTest do
     assert Parser.parse!("// This is a comment") == %Parser.Comment{content: " This is a comment"}
   end
 
-  test "parse A-Instruction" do
-    assert Parser.parse!("@123") == %Parser.AInstruction{address: "123"}
+  describe "parse a-instruction" do
+    test "non-symbolic" do
+      assert Parser.parse!("@123") == %Parser.AInstruction{address: "123", symbolic: false}
+    end
+
+    test "symbolic" do
+      assert Parser.parse!("@var") == %Parser.AInstruction{address: "var", symbolic: true}
+    end
   end
 
   describe "parse C-Instruction" do
