@@ -2,21 +2,19 @@ defmodule HackAssembler do
   alias HackAssembler.{MachineCode, Parser}
 
   def assemble(file_path) do
-    File.stream!(file_path)
+    
+    file_path
+    |> File.stream!()
     |> remove_spaces_and_empty_lines()
-    |> Stream.map(fn line ->
-      case Parser.parse!(line) do
-        %Parser.Comment{} ->
-          :no_instruction
+    |> Stream.map(&Parser.parse!/1)
+    |> Stream.reject(&is_struct(&1, Parser.Comment))
+    |> Stream.transform(0, fn 
+      %Parser.AInstruction{address: addr}, address ->
+        {[MachineCode.a_instruction(addr)], address}
 
-        %Parser.AInstruction{address: address} ->
-          MachineCode.a_instruction(address)
-
-        %Parser.CInstruction{dest: dest, comp: comp, jump: jump} ->
-          MachineCode.c_instruction(dest, comp, jump)
-      end
+      %Parser.CInstruction{dest: dest, comp: comp, jump: jump}, address ->
+        {[MachineCode.c_instruction(dest, comp, jump)], address}
     end)
-    |> Stream.reject(&(&1 == :no_instruction))
     |> Stream.map(&(&1 <> "\n"))
     |> Enum.into(File.stream!(destination_path(file_path)))
 
