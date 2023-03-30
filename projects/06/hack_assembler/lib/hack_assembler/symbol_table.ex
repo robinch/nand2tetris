@@ -31,7 +31,7 @@ defmodule HackAssembler.SymbolTable do
   def handle_call({:add_var, name}, _from, %{n: n, s_table: s_table} = state) do
     updated_state = %{
       state
-      | s_table: Map.put(s_table, name, n),
+      | s_table: Map.put(s_table, name, Integer.to_string(n)),
         n: n + 1
     }
 
@@ -60,14 +60,14 @@ defmodule HackAssembler.SymbolTable do
 
   defp initialize_s_table() do
     Enum.reduce(0..15, %{}, fn n, table ->
-      Map.put(table, "R#{n}", n)
+      Map.put(table, "R#{n}", Integer.to_string(n))
     end)
-    |> Map.put("SCREEN", 16384)
-    |> Map.put("KBD", 24576)
-    |> Map.put("SP", 0)
-    |> Map.put("LCL", 1)
-    |> Map.put("ARG", 2)
-    |> Map.put("THIS", 3)
-    |> Map.put("THAT", 4)
+    |> Map.put("SCREEN", "16384")
+    |> Map.put("KBD", "24576")
+    |> Map.put("SP", "0")
+    |> Map.put("LCL", "1")
+    |> Map.put("ARG", "2")
+    |> Map.put("THIS", "3")
+    |> Map.put("THAT", "4")
   end
 end
